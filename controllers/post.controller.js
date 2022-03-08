@@ -29,7 +29,7 @@ const createPost = async(req, res= response) =>{
         })}
 
         const post = await Post.create(dataPost);
-        console.log(post)
+        //TODO guardar post en user
 
         if (dataFeatures){
             dataFeatures._post = post._id
@@ -97,6 +97,7 @@ const getPosts = async(req, res = response) => {
         posts
     });
 }
+
 
 
 const updatePost = async(req, res= response) =>{

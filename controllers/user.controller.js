@@ -23,6 +23,24 @@ const getUser = async(req, res= response) =>{
     }
 };
 
+const getPostsUser = async (req, res = response) => {
+    const { id } = req.params;
+    const { skip = 0, limit = 10 } = req.query;
+
+    const [{_posts: posts}] = await User.find({ _id: id,  active: true })
+            .populate('_posts')
+            //.populate('categoria', 'nombre')
+            .skip(Number(skip))
+            .limit(Number(limit))
+
+    console.log(posts)
+    return res.json({ 
+        ok: true,
+        posts
+    });
+
+}
+
 const updateImgUser = async(req, res = response) => {
     try {
         const { id } = req.params;
@@ -96,6 +114,34 @@ const updateUser = async(req, res= response) =>{
 };
 
 
+const addPostaUser = async(req, res= response) =>{
+    try {
+        const { id } = req.params;
+        const { idPost } = req.body;
+        //const user = await User.findByIdAndUpdate(id, {active: false}, { new: true});
+
+        const user = await User.findOne({_id: id, active:true});
+        const posts = user._posts;
+        const newPosts = [...posts, idPost];
+
+        user._posts = newPosts;
+        await user.save();
+
+        return res.json({
+            ok: true,
+            msg:"add a post a user"
+        });
+
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            ok:false,
+            msg: error
+        });
+    }
+};
+
+
 const deleteUser = async(req, res= response) =>{
     try {
         const { id } = req.params;
@@ -118,6 +164,8 @@ const deleteUser = async(req, res= response) =>{
 
 module.exports = {
     getUser,
+    getPostsUser,
+    addPostaUser,
     updateUser,
     deleteUser,
 };

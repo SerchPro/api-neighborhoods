@@ -29,6 +29,8 @@ router.post("/", [
 
 router.get("/getAllPost", getPosts);
 
+
+
 router.get("/:id", [
     check('id', 'invalid id').isMongoId(),
     check('id').custom(postExists),
