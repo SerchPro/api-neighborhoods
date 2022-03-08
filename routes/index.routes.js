@@ -2,7 +2,7 @@ const router = require("express").Router();
 const authRoutes = require("./auth.routes");
 const postRoutes = require("./post.routes");
 const reviewRoutes = require("./review.routes");
-
+const userRoutes = require("./user.routes");
 
 /* GET home page */
 router.get("/", (req, res, next) => {
@@ -12,6 +12,7 @@ router.get("/", (req, res, next) => {
 router.use("/auth", authRoutes);
 router.use("/post", postRoutes);
 router.use("/review", reviewRoutes);
+router.use("/user", userRoutes)
 
 
 module.exports = router;
