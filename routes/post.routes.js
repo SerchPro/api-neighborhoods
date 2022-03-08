@@ -6,9 +6,9 @@
 const router = require("express").Router();
 const { check } = require('express-validator');
 
-const { createPost, getPost, updatePost, deletePost, getPosts} = require('../controllers/post.controller');
+const { createPost, getPost, updatePost, deletePost, getPosts, addReviewPost, addFavoritePost} = require('../controllers/post.controller');
 const { validateFileds } = require('../middleware/validator_fields');
-const { categoryExists, userExists, postExists } = require('../helpers/db-validator')
+const { categoryExists, userExists, postExists, reviewExists } = require('../helpers/db-validator')
 //const { validateJWT } = require("../middleware/validate-jwt");
 
 
@@ -29,15 +29,28 @@ router.post("/", [
 
 router.get("/getAllPost", getPosts);
 
-
-
 router.get("/:id", [
     check('id', 'invalid id').isMongoId(),
     check('id').custom(postExists),
     validateFileds
 ], getPost);
 
+router.post("/:id/addReviewPost", [
+    check('id', 'invalid id').isMongoId(),
+    check('id').custom(postExists),
+    check('idReview', 'invalid idReview').isMongoId(),
+    check('idReview').custom(reviewExists),
+    validateFileds
+], addReviewPost);
 
+
+router.post("/:id/addFavoritePost", [
+    check('id', 'invalid id').isMongoId(),
+    check('id').custom(postExists),
+    check('idUser', 'invalid idUser').isMongoId(),
+    check('idUser').custom(userExists),
+    validateFileds
+], addFavoritePost);
 
 router.put("/:id", [
     check('id', 'invalid id').isMongoId(),

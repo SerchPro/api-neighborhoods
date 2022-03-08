@@ -59,9 +59,7 @@ const getPost = async(req, res= response) =>{
         const post = await Post.findOne({ _id:id, active: true})
                 .populate('_user', 'username email image_url');
         console.log(post)
-        if (post){
-            feature = await Features.findOne({_post: post._id})
-        }
+        if (post) feature = await Features.findOne({_post: post._id})
         console.log(feature)
         return res.json({
             ok: true,
@@ -69,7 +67,6 @@ const getPost = async(req, res= response) =>{
             post,
             feature
         });
-
     }catch(error){
         console.log(error)
         return res.status(500).json({
@@ -79,6 +76,57 @@ const getPost = async(req, res= response) =>{
     }
 };
 
+
+const addReviewPost = async(req, res= response) =>{
+    try {
+        const { id } = req.params;
+        const { idReview } = req.body;
+        const post = await Post.findOne({ _id:id, active: true});
+        const reviews = post._reviews;
+        const newReviews = [...reviews, idReview];
+        post._reviews = newReviews;
+        await post.save();
+
+        console.log(post)
+        return res.json({
+            ok: true,
+            msg:"add Review post",
+            post
+        });
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            ok:false,
+            msg: error
+        });
+    }
+};
+
+
+const addFavoritePost = async(req, res= response) =>{
+    try {
+        const { id } = req.params;
+        const { idUser } = req.body;
+        const post = await Post.findOne({ _id:id, active: true});
+        const favorites = post._favorites;
+        const newFavorites = [...favorites, idUser];
+        post._favorites = newFavorites;
+        await post.save();
+
+        console.log(post)
+        return res.json({
+            ok: true,
+            msg:"add Review post",
+            post
+        });
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            ok:false,
+            msg: error
+        });
+    }
+};
 
 const getPosts = async(req, res = response) => {
     const { skip = 0, limit = 5 } = req.query;
@@ -143,6 +191,8 @@ const deletePost = async(req, res= response) =>{
 
 module.exports = {
     createPost,
+    addReviewPost,
+    addFavoritePost,
     getPost,
     getPosts,
     updatePost,
