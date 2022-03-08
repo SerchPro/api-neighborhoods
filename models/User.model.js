@@ -63,13 +63,6 @@ const userSchema = new Schema(
           ref: "Post",
         },
       ],
-    _reviews:
-      [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "Review",
-        },
-      ],
     _following:
       [
         {
