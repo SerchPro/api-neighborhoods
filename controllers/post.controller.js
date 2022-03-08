@@ -93,7 +93,10 @@ const getPosts = async(req, res = response) => {
             .limit(Number(limit))
         ]);
     //console.log(count, posts)
-    res.json({ count, posts });
+    return res.json({
+        count,
+        posts
+    });
 }
 
 
