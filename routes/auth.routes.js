@@ -9,7 +9,7 @@ const { check } = require('express-validator');
 const isLoggedOut = require("../middleware/isLoggedOut");
 const isLoggedIn = require("../middleware/isLoggedIn");
 
-const { login, signup, logout, recreateToken} = require('../controllers/auth.controller');
+const { login, signup, logout, recreateToken, forgotPassword} = require('../controllers/auth.controller');
 const { emailExists,usernameExists } = require("../helpers/db-validator");
 const { validateFileds } = require('../middleware/validator_fields');
 const { correctPassword } = require("../helpers/validators");
@@ -41,6 +41,10 @@ router.get("/logout", [isLoggedIn], logout);
 router.get("/renew", validateJWT, recreateToken);
 //router.use( validateJWT )
 
+router.get("/forgot_password",[
+  check('email', 'Please provide a correct email.').isEmail(),
+  validateFileds
+], forgotPassword);
 
 
 module.exports = router;

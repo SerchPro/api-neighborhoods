@@ -3,6 +3,7 @@ const bcryptjs = require("bcryptjs");
 
 const User = require("../models/User.model"); // Require the User model in order to interact with the database
 const { createJWT } = require('../helpers/jwt');
+const { sendEmail } = require('../helpers/send-email');
 
 const saltRounds = 10; // How many rounds should bcrypt run the salt (default [10 - 12 rounds])
 
@@ -83,12 +84,41 @@ const recreateToken = async (req, res = response, next) => {
       ok: true,
       token
     });
-   
 };
+
+
+const forgotPassword = async (req, res = response) => {
+  try {
+    const {email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+        return res.status(403).json({ok:false, msg:" cant find a user "})
+    }
+    const data = { url: `${process.env.ANIME_URI}/auth/reset_password/${user.id}` }
+    const emailSent = await sendEmail(email, data, 'd-eb14ae8bf8924318a727ec3390616d61');
+
+    return res.json({
+      ok: true,
+      msg:"email sent",
+      emailSent
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      ok:false,
+      msg: error
+  });
+  }
+
+};
+
+
 
 module.exports = {
     login,
     signup,
     logout,
-    recreateToken
+    recreateToken,
+    forgotPassword
 };
