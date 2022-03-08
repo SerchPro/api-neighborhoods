@@ -17,7 +17,7 @@ const featuresSchema = new Schema(
         },
         payment_method :{
             type: String,
-            enum: [" ","Establecimiento", "Servicio_a_domicilio", "punto_medio"],
+            enum: [" ","Efectivo", "Tranferencia_electrónica", "tarjeta_de_debito", "tarjeta_de_credito"],
             default: " "
         },
         property_type :{
@@ -32,17 +32,19 @@ const featuresSchema = new Schema(
         },
         start: {
             type: Date,
-            required: true
-        },
-        marca: {
-            type: String,
-        },
-        modelo: {
-            type: Number,
         },
         end: {
             type: Date,
-            required: true
+        },
+        brand: {
+            type: String,
+        },
+        year: {
+            type: Number,
+        },
+        active: {
+            type: Boolean,
+            default: true
         },
         _post: {
             type:Schema.Types.ObjectId,
