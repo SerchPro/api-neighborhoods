@@ -5,10 +5,18 @@ const postSchema = new Schema(
         title:{
             type: String,
             required: [true, 'the title is required'],
+            min: [2, "Title must be at least 2 characters"],
+            max: [20, "Title must be at most 20 characters"],
         },
         description:{
             type: String,
             required: [true, 'the description is required'],
+            min: [10, "description must be at least 10 characters"],
+        },
+        category: {
+            type: Schema.Types.ObjectId,
+            ref: 'Category',
+            required: true
         },
         links:[{
             type: String
@@ -16,9 +24,14 @@ const postSchema = new Schema(
         images:[{
             type: String
         }],
+        active: {
+            type: Boolean,
+            default: true
+        },
         _user: {
             type:Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            required: true
         },
         _favorites:
             [
@@ -40,5 +53,4 @@ const postSchema = new Schema(
     }
 );
 
-const Post = model("New", postSchema);
-module.exports = Post;
+module.exports = model("Post", postSchema);
