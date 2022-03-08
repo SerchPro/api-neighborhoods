@@ -90,11 +90,10 @@ const recreateToken = async (req, res = response, next) => {
 const forgotPassword = async (req, res = response) => {
   try {
     const {email } = req.body;
-
     const user = await User.findOne({ email });
-    if (!user) {
-        return res.status(403).json({ok:false, msg:" cant find a user "})
-    }
+
+    if (!user)  return res.status(403).json({ok:false, msg:" cant find a user "})
+
     const data = { url: `${process.env.ANIME_URI}/auth/reset_password/${user.id}` }
     const emailSent = await sendEmail(email, data, 'd-eb14ae8bf8924318a727ec3390616d61');
 
@@ -113,6 +112,68 @@ const forgotPassword = async (req, res = response) => {
 
 };
 
+const resetPassword = async( req, res= response) => {
+  try {
+    const { id } = req.params;
+    const { newPassword, confirmnewPassword } = req.body;
+
+    if(newPassword !== confirmnewPassword) return res.status(406).json({ok:false, msg:" your passwords are different "})
+
+    const user = await User.findOne({ _id:id, active: true });
+
+    const salt = bcryptjs.genSaltSync(saltRounds);
+    const newPasswordHash = bcryptjs.hashSync(newPassword, salt);
+    const newUSer = await User.findByIdAndUpdate(id, {password : newPasswordHash}, {new:true})
+
+    return res.json({
+      ok:true,
+      msg: 'Password saved successfully'
+    })
+
+  } catch (error) {
+      return res.status(500).json({
+        ok:false,
+        msg: error
+    });
+  }
+}
+
+
+const changeOfPassword = async (req, res = response) => {
+  try{
+    const { id } = req.params;
+    const { actualPassword, newPassword, confirmnewPassword } = req.body;
+
+    if(newPassword !== confirmnewPassword) return res.status(406).json({ok:false, msg:" your passwords are different "});
+
+    user = await User.findOne({ _id:id, active: true });
+
+    if (!user || !bcryptjs.compareSync(actualPassword, user.password)) {
+        return res.status(400).json({
+          ok:false,
+          msg: "Wrong credentials."
+        });
+    }
+
+    const salt = bcryptjs.genSaltSync(saltRounds);
+    const newPasswordHash = bcryptjs.hashSync(newPassword, salt);
+    const newUSer = await User.findByIdAndUpdate(id, {password : newPasswordHash}, {new:true})
+
+    return res.json({
+      ok:true,
+      msg: 'Password saved successfully'
+    })
+
+
+  } catch (error) {
+      return res.status(500).json({
+        ok:false,
+        msg: error
+    });
+  }
+
+}
+
 
 
 module.exports = {
@@ -120,5 +181,7 @@ module.exports = {
     signup,
     logout,
     recreateToken,
-    forgotPassword
+    forgotPassword,
+    resetPassword,
+    changeOfPassword
 };

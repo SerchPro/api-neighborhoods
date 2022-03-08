@@ -46,7 +46,8 @@ const userSchema = new Schema(
       type: Number,
       required: [true, "Rating is required"],
       min : [1, "Rating must be at least 1"],
-      max : [5, "Rating must be at most 5"]
+      max : [5, "Rating must be at most 5"],
+      default : 2
     },
     _posts:
       [

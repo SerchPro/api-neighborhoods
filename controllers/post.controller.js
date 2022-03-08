@@ -6,7 +6,6 @@ const Features = require('../models/Features.model')
 
 
 const { validateDataPost } = require('../helpers/validate-post');
-const { findOneAndUpdate } = require('../models/Post.model');
 
 const createPost = async(req, res= response) =>{
     try {
@@ -93,8 +92,8 @@ const getPosts = async(req, res = response) => {
             .limit(Number(limit))
         ]);
     //console.log(count, posts)
-    return res.json({
-        count,
+    return res.json({ 
+        count, 
         posts
     });
 }
