@@ -22,7 +22,8 @@ const login = async(req, res= response) =>{
         req.session.currentUser = user;
         return res.json({
           ok: true,
-          user,
+          uid:user._id,
+          username: user.username,
           token
         });
 
