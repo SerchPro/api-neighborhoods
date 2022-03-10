@@ -134,7 +134,7 @@ const getPosts = async(req, res = response) => {
         [
             Post.countDocuments({ active: true }),
             Post.find({ active: true })
-            //.populate('usuario', 'nombre')
+            .populate('_user', 'username image_url')
             //.populate('categoria', 'nombre')
             .skip(Number(skip))
             .limit(Number(limit))
