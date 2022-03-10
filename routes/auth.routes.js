@@ -21,12 +21,13 @@ const { isDate } = require("../helpers/isDate");
 router.post("/signup", [
   isLoggedOut,
   check('password', 'Please provide a  password.').not().isEmpty(),
-  check('username', 'Please provide a  username.').not().isEmpty(),
-  check('email', 'Please provide a correct email.').isEmail(),
-  check('birthday', 'Please provide a correct birthday.').custom( isDate),
-  check('email').custom(emailExists),
-  check('username').custom(usernameExists),
   check('password').custom(correctPassword),
+  check('confirmPassword', 'Please provide a confirmPassword.').not().isEmpty(),
+  check('username', 'Please provide a  username.').not().isEmpty(),
+  check('username').custom(usernameExists),
+  check('email', 'Please provide a correct email.').isEmail(),
+  check('email').custom(emailExists),
+  check('birthday', 'Please provide a correct birthday.').custom( isDate),
   validateFileds
 ] , signup);
 
