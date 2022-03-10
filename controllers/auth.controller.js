@@ -37,8 +37,10 @@ const login = async(req, res= response) =>{
 };
 
 const signup = async(req, res = response) =>{
+  console.log("signup")
     try {
-        const { username, birthday, email,  password } = req.body;
+        const { username, birthday, email,  password, confirmPassword } = req.body;
+        if(password !== confirmPassword) return res.status(406).json({ok:false, msg:" your passwords are different "})
         const salt = bcryptjs.genSaltSync(saltRounds);
         const hashedPassword = bcryptjs.hashSync(password, salt);
         const user = await User.create({
@@ -52,7 +54,8 @@ const signup = async(req, res = response) =>{
         req.session.user = user;
         res.status(201).json({
           ok: true,
-          user,
+          uid:user._id,
+          username: user.username,
           token
         });;
 
@@ -83,7 +86,9 @@ const recreateToken = async (req, res = response, next) => {
   const {jwtResponse:token} = await createJWT(uid, username);
     return res.json({ 
       ok: true,
-      token
+      token,
+      uid , 
+      username
     });
 };
 
