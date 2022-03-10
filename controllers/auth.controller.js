@@ -24,6 +24,7 @@ const login = async(req, res= response) =>{
           ok: true,
           uid:user._id,
           username: user.username,
+          url_user: user.image_url,
           token
         });
 
@@ -56,6 +57,7 @@ const signup = async(req, res = response) =>{
           ok: true,
           uid:user._id,
           username: user.username,
+          url_user: user.image_url,
           token
         });;
 
@@ -82,12 +84,13 @@ const logout = (req, res = response) => {
 
 const recreateToken = async (req, res = response, next) => {
 
-  const {uid , username}  = req;
+  const {uid , username, url_user}  = req;
   const {jwtResponse:token} = await createJWT(uid, username);
     return res.json({ 
       ok: true,
       token,
-      uid , 
+      uid ,
+      url_user,
       username
     });
 };

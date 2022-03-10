@@ -28,7 +28,7 @@ const userSchema = new Schema(
     },
     image_url: {
         type: String,
-        default: 'https://res.cloudinary.com/dnywgpjkn/image/upload/v1642564314/notFound_ryzezw.jpg'
+        default: 'https://pbs.twimg.com/profile_images/515658522034311168/T6z7LpeE_400x400.jpeg'
     },
     google: {
         type: Boolean,
