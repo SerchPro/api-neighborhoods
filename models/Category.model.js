@@ -7,7 +7,7 @@ const categorySchema = new Schema(
             required: [true, 'the name is required'],
             unique: true
         },
-        state: {
+        active: {
             type: Boolean,
             default: true,
             required: true

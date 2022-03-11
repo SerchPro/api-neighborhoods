@@ -20,10 +20,15 @@ const usernameExists = async( username ) => {
 }
 
 const categoryExists = async( _id ) =>{
-    const category = await Category.findById({ _id });
-    if ( !category ) {
-        throw new Error(`the category: ${ category } doesnt exist.`)
+    console.log("hello", _id);
+    try{
+        const category = await Category.findById({ _id });
+        if ( !category ) throw new Error(`the category: ${ category } doesnt exist.`)
+    }catch(err){
+        console.log(err)
+        throw new Error(`Error to validate category`)
     }
+    
 }
 
 const userExists = async( _id ) =>{

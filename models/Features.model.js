@@ -56,5 +56,4 @@ const featuresSchema = new Schema(
     }
 );
 
-const Features = model("Features", featuresSchema);
-module.exports = Features;
+module.exports = model("Features", featuresSchema);
