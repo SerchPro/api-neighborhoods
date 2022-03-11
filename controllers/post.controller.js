@@ -3,6 +3,7 @@ const { response } = require('express');
 const Post = require("../models/Post.model"); // Require the User model in order to interact with the database
 const Category = require('../models/Category.model');
 const Features = require('../models/Features.model')
+const axios = require("axios");
 
 
 const { validateDataPost } = require('../helpers/validate-post');
@@ -30,6 +31,10 @@ const createPost = async(req, res= response) =>{
 
         const post = await Post.create(dataPost);
         //TODO guardar post en user
+
+        const addPost = await axios.post(`${process.env.NEIGHBORHOODS_URI}/${userID}/addPostaUSer`, {
+            "idPost": post._id
+        });
 
         //const secure_url = await uploadFile(user, req.files.archivo);
 
