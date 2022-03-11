@@ -14,13 +14,13 @@ const validateJWT = ( req, res = response, next ) => {
     }
 
     try {
-        const { uid, username, url_user} = jwt.verify(
+        const { uid, username, image_url} = jwt.verify(
             token,
             process.env.SECRET_JWT_SEED
         )
         req.uid = uid;
         req.username = username
-        req.url_user = url_user
+        req.image_url = image_url
 
     }catch (err){
         console.log(err)

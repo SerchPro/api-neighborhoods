@@ -31,6 +31,8 @@ const createPost = async(req, res= response) =>{
         const post = await Post.create(dataPost);
         //TODO guardar post en user
 
+        //const secure_url = await uploadFile(user, req.files.archivo);
+
         if (dataFeatures){
             dataFeatures._post = post._id
             console.log(post._id)

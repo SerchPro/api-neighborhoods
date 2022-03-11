@@ -17,7 +17,8 @@ const login = async(req, res= response) =>{
               msg: "Wrong credentials."
             });
         }
-        const {jwtResponse:token} = await createJWT(user._id, user.username);
+        console.log(user._id, user.username, user.image_url)
+        const {jwtResponse:token} = await createJWT(user._id, user.username, user.image_url);
         // cokies
         req.session.currentUser = user;
         return res.json({
@@ -50,7 +51,7 @@ const signup = async(req, res = response) =>{
             birthday,
             password: hashedPassword,
           });
-        const {jwtResponse:token} = await createJWT(user._id, user.username);
+        const {jwtResponse:token} = await createJWT(user._id, user.username, user.image_url);
         // cokies
         req.session.user = user;
         res.status(201).json({
@@ -84,13 +85,13 @@ const logout = (req, res = response) => {
 
 const recreateToken = async (req, res = response, next) => {
 
-  const {uid , username, url_user}  = req;
-  const {jwtResponse:token} = await createJWT(uid, username);
-    return res.json({ 
+  const {uid , username, image_url}  = req;
+  const {jwtResponse:token} = await createJWT(uid, username, image_url);
+    return res.json({
       ok: true,
       token,
       uid ,
-      url_user,
+      url_user:image_url,
       username
     });
 };
