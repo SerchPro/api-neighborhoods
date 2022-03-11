@@ -30,10 +30,9 @@ const createPost = async(req, res= response) =>{
         })}
 
         const post = await Post.create(dataPost);
-        //TODO guardar post en user
-
-        const addPost = await axios.post(`${process.env.NEIGHBORHOODS_URI}/${userID}/addPostaUSer`, {
-            "idPost": post._id
+        const idPost = post._id
+        const addPost = await axios.post(`${process.env.NEIGHBORHOODS_URI}/user/${userID}/addPostaUSer`, {
+            "idPost": idPost
         });
 
         //const secure_url = await uploadFile(user, req.files.archivo);
