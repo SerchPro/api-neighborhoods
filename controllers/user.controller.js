@@ -131,7 +131,7 @@ const updateImgUser = async(req, res = response) => {
 const updateUser = async(req, res= response) =>{
     try {
         const { id } = req.params;
-        const {username, email, phone, birthday, bio } = req.body;
+        const {username, email, phone, birthday, bio, name } = req.body;
         const user = await User.findById(id)
         if(!username && !email && !phone && !birthday && !bio){
             console.log("no parameters")
@@ -154,6 +154,7 @@ const updateUser = async(req, res= response) =>{
         if ( phone && user.phone != phone) dataupdate.phone = phone;
         if ( birthday && user.birthday != birthday) dataupdate.birthday = birthday;
         if ( bio && user.bio != bio) dataupdate.bio = bio;
+        if ( name && user.name != name) dataupdate.bio = name;
         console.log("dataUpdate", dataupdate)
         const newUser = await User.findByIdAndUpdate(id, dataupdate , { new: true});
         return res.json({
