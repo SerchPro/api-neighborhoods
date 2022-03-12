@@ -151,14 +151,22 @@ const resetPassword = async( req, res= response) => {
 
 const changeOfPassword = async (req, res = response) => {
   try{
-    const { id } = req.params;
-    const { actualPassword, newPassword, confirmnewPassword } = req.body;
+    const {uid}  = req;
+    if(!uid){
+      console.log("uid not found")
+      return res.status(500).json({
+        ok:false,
+        msg: "Sometihing went wrong"
+      });
+    }
+
+    const { currentPassword, newPassword, confirmnewPassword } = req.body;
 
     if(newPassword !== confirmnewPassword) return res.status(406).json({ok:false, msg:" your passwords are different "});
 
-    user = await User.findOne({ _id:id, active: true });
+    user = await User.findOne({ _id:uid, active: true });
 
-    if (!user || !bcryptjs.compareSync(actualPassword, user.password)) {
+    if (!user || !bcryptjs.compareSync(currentPassword, user.password)) {
         return res.status(400).json({
           ok:false,
           msg: "Wrong credentials."
@@ -167,7 +175,7 @@ const changeOfPassword = async (req, res = response) => {
 
     const salt = bcryptjs.genSaltSync(saltRounds);
     const newPasswordHash = bcryptjs.hashSync(newPassword, salt);
-    const newUSer = await User.findByIdAndUpdate(id, {password : newPasswordHash}, {new:true})
+    const newUSer = await User.findByIdAndUpdate(uid, {password : newPasswordHash}, {new:true})
 
     return res.json({
       ok:true,
@@ -176,9 +184,10 @@ const changeOfPassword = async (req, res = response) => {
 
 
   } catch (error) {
+    console.log(error)
       return res.status(500).json({
         ok:false,
-        msg: error
+        msg: 'Sometihing went wrong'
     });
   }
 

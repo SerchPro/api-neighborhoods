@@ -60,10 +60,9 @@ router.post("/:id/resetPassword", [
   validateFileds
 ], resetPassword)
 
-router.post("/:id/changePassword", [
-  check('id', 'invalid id').isMongoId(),
-  check('id').custom(userExists),
-  check('actualPassword', 'Please provide a  actualPassword.').not().isEmpty(),
+router.post("/changePassword", [
+  validateJWT,
+  check('currentPassword', 'Please provide a  currentPassword.').not().isEmpty(),
   check('newPassword', 'Please provide a  newPassword.').not().isEmpty(),
   check('newPassword').custom(correctPassword),
   check('confirmnewPassword', 'Please provide a confirmnewPassword.').not().isEmpty(),
