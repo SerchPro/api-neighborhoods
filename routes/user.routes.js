@@ -6,9 +6,9 @@
 const router = require("express").Router();
 const { check } = require('express-validator');
 const { validateFileds } = require('../middleware/validator_fields');
-const { getUser, updateUser, deleteUser, addPostaUser, getPostsUser, 
+const { getUser, getUserbyUsername, updateUser, deleteUser, addPostaUser, getPostsUser,
         addFavoriteUser, addFollowerUser, addFollowingUser} = require('../controllers/user.controller')
-const { userExists, postExists } = require('../helpers/db-validator')
+const { userExists, postExists, userExistsByUsername } = require('../helpers/db-validator')
 
  //const { validateJWT } = require("../middleware/validate-jwt");
 
@@ -29,6 +29,12 @@ router.get("/:id/getPostsUser", [
     check('id').custom(userExists),
     validateFileds
 ], getPostsUser);
+
+
+router.get("/:username/username", [
+    check('username').custom(userExistsByUsername),
+    validateFileds
+], getUserbyUsername);
 
 router.get("/:id", [
     check('id', 'invalid id').isMongoId(),

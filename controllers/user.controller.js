@@ -18,7 +18,29 @@ const getUser = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "Something went wrong"
+        });
+    }
+};
+
+
+const getUserbyUsername = async(req, res= response) =>{
+    try {
+        const { username } = req.params;
+        console.log(username)
+        const user = await User.findOne({username , active: true});
+        const userSend = validateDataUser(user);
+
+        return res.json({
+            ok: true,
+            user:userSend
+        });
+
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            ok:false,
+            msg: "Something went wrong"
         });
     }
 };
@@ -41,7 +63,7 @@ const getPostsUser = async (req, res = response) => {
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "Something went wrong"
         });
     }
 }
@@ -63,7 +85,7 @@ const addFavoriteUser = async (req, res) => {
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "Something went wrong"
         });
     }
 }
@@ -85,7 +107,7 @@ const addFollowerUser = async (req, res) => {
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "Something went wrong"
         });
     }
 }
@@ -107,7 +129,7 @@ const addFollowingUser = async (req, res) => {
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "Something went wrong"
         });
     }
 }
@@ -200,6 +222,7 @@ const deleteUser = async(req, res= response) =>{
 
 module.exports = {
     getUser,
+    getUserbyUsername,
     getPostsUser,
     addPostaUser,
     addFavoriteUser,

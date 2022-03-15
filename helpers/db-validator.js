@@ -38,6 +38,14 @@ const userExists = async( _id ) =>{
     }
 }
 
+const userExistsByUsername = async( username ) =>{
+    console.log(username)
+    const user = await Usuario.findOne({username , active: true});
+    if ( !user ) {
+        throw new Error(`the user: ${ user } doesnt exist.`)
+    }
+}
+
 const postExists = async( _id ) =>{
     const post = await Post.findById({ _id });
     if ( !post ) {
@@ -55,6 +63,7 @@ const reviewExists = async( _id ) =>{
 module.exports = {
     emailExists,
     usernameExists,
+    userExistsByUsername,
     categoryExists,
     userExists,
     postExists,
