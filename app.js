@@ -17,6 +17,16 @@ require("./config")(app);
 const cors = require("cors");
 app.use(cors())
 
+
+
+// upload files
+const fileUpload = require('express-fileupload');
+
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+}));
+
 // 👇 Start handling routes here
 // Contrary to the views version, all routes are controlled from the routes/index.js
 const allRoutes = require("./routes/index.routes");
