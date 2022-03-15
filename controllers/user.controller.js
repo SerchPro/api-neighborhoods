@@ -133,7 +133,7 @@ const updateUser = async(req, res= response) =>{
         const { id } = req.params;
         const {username, email, phone, birthday, bio, name } = req.body;
         const user = await User.findById(id)
-        if(!username && !email && !phone && !birthday && !bio){
+        if(!username && !email && !phone && !birthday && !bio && !name){
             console.log("no parameters")
             return res.status(400).json({
                 ok:false,
@@ -154,7 +154,7 @@ const updateUser = async(req, res= response) =>{
         if ( phone && user.phone != phone) dataupdate.phone = phone;
         if ( birthday && user.birthday != birthday) dataupdate.birthday = birthday;
         if ( bio && user.bio != bio) dataupdate.bio = bio;
-        if ( name && user.name != name) dataupdate.bio = name;
+        if ( name && user.name != name) dataupdate.name = name;
         console.log("dataUpdate", dataupdate)
         const newUser = await User.findByIdAndUpdate(id, dataupdate , { new: true});
         return res.json({

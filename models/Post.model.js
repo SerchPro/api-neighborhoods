@@ -4,7 +4,6 @@ const postSchema = new Schema(
     {
         title:{
             type: String,
-            required: [true, 'the title is required'],
             min: [2, "Title must be at least 2 characters"],
             max: [20, "Title must be at most 20 characters"],
         },
