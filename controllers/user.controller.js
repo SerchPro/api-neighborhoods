@@ -1,5 +1,6 @@
 const { response } = require('express');
 const { uploadFile } = require('../helpers/upload-file');
+const { validateDataUser } = require('../helpers/validate-user');
 
 const User = require("../models/User.model");
 
@@ -7,9 +8,11 @@ const getUser = async(req, res= response) =>{
     try {
         const { id } = req.params;
         const user = await User.findOne({_id:id , active: true});
+        const userSend = validateDataUser(user);
+
         return res.json({
             ok: true,
-            user
+            user:userSend
         });
     }catch(error){
         console.log(error)
@@ -109,24 +112,6 @@ const addFollowingUser = async (req, res) => {
     }
 }
 
-const updateImgUser = async(req, res = response) => {
-    try {
-        const { id } = req.params;
-        const {image_url } = req.body;
-        const user = await User.findById(id)
-        uploadFile(user.image_url, )
-        return res.json({
-            ok: true,
-            user
-        });
-    }catch(error){
-        console.log(error)
-        return res.status(500).json({
-            ok:false,
-            msg: error
-        });
-    }
-}
 
 const updateUser = async(req, res= response) =>{
     try {
@@ -157,10 +142,10 @@ const updateUser = async(req, res= response) =>{
         if ( name && user.name != name) dataupdate.name = name;
         console.log("dataUpdate", dataupdate)
         const newUser = await User.findByIdAndUpdate(id, dataupdate , { new: true});
+        const userSend = validateDataUser(newUser);
         return res.json({
             ok: true,
-            msg:"update user",
-            newUser
+            user:userSend
         });
     }catch(error){
         console.log(error)
