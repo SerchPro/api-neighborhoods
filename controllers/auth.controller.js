@@ -4,6 +4,7 @@ const bcryptjs = require("bcryptjs");
 const User = require("../models/User.model"); // Require the User model in order to interact with the database
 const { createJWT } = require('../helpers/jwt');
 const { sendEmail } = require('../helpers/send-email');
+const { validateDataUser } = require('../helpers/validate-user');
 
 const saltRounds = 10; // How many rounds should bcrypt run the salt (default [10 - 12 rounds])
 
@@ -17,15 +18,12 @@ const login = async(req, res= response) =>{
               msg: "Wrong credentials."
             });
         }
-        console.log(user._id, user.username, user.image_url)
-        const {jwtResponse:token} = await createJWT(user._id, user.username, user.image_url);
+        const {jwtResponse:token} = await createJWT(user._id);
+        const userSend = validateDataUser(user);
         // cokies
-        req.session.currentUser = user;
         return res.json({
           ok: true,
-          uid:user._id,
-          username: user.username,
-          url_user: user.image_url,
+          user:userSend,
           token
         });
 
@@ -51,14 +49,12 @@ const signup = async(req, res = response) =>{
             birthday,
             password: hashedPassword,
           });
-        const {jwtResponse:token} = await createJWT(user._id, user.username, user.image_url);
+        const {jwtResponse:token} = await createJWT(user._id);
         // cokies
-        req.session.user = user;
+        const userSend = validateDataUser(user);
         res.status(201).json({
           ok: true,
-          uid:user._id,
-          username: user.username,
-          url_user: user.image_url,
+          user:userSend,
           token
         });;
 
@@ -85,14 +81,16 @@ const logout = (req, res = response) => {
 
 const recreateToken = async (req, res = response, next) => {
 
-  const {uid , username, image_url}  = req;
-  const {jwtResponse:token} = await createJWT(uid, username, image_url);
+  const {uid}  = req;
+  user = await User.findOne({ _id:uid, active: true });
+
+  const {jwtResponse:token} = await createJWT(uid);
+  const userSend = validateDataUser(user);
+
     return res.json({
       ok: true,
       token,
-      uid ,
-      url_user:image_url,
-      username
+      user:userSend
     });
 };
 
@@ -175,7 +173,7 @@ const changeOfPassword = async (req, res = response) => {
 
     const salt = bcryptjs.genSaltSync(saltRounds);
     const newPasswordHash = bcryptjs.hashSync(newPassword, salt);
-    const newUSer = await User.findByIdAndUpdate(uid, {password : newPasswordHash}, {new:true})
+    await User.findByIdAndUpdate(uid, {password : newPasswordHash}, {new:true})
 
     return res.json({
       ok:true,

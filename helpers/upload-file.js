@@ -12,8 +12,7 @@ async function uploadFile(image_url, file) {
             }
         }
 
-        const { tempFilePath } = file;
-        const { secure_url } = await cloudinary.uploader.upload(tempFilePath);
+        const { secure_url } = await cloudinary.uploader.upload(file);
 
         return secure_url
 
@@ -24,26 +23,7 @@ async function uploadFile(image_url, file) {
 }
 
 
-async function uploadFiles(images, file) {
-    const dataResponse = {
-        url : '',
-        error: true
-    };
-    try {
 
-        const { tempFilePath } = file;
-        const { secure_url } = await cloudinary.uploader.upload(tempFilePath);
-        dataResponse.url = secure_url;
-        dataResponse.error = false
-
-        return dataResponse
-
-    } catch (e) {
-        console.log("error to upload the file ", e);
-        return dataResponse;
-    }
-}
 module.exports = {
-    uploadFile,
-    uploadFiles
+    uploadFile
 };

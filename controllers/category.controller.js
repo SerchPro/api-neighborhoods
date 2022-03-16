@@ -26,7 +26,7 @@ const getAllCategory = async(req, res = response) =>{
         const [Ncategories, categories ] = await Promise.all(
             [
                 Category.countDocuments({ active: true }),
-                Category.find({ active: true })
+                Category.find({ active: true }, '_id, name')
             ]);
         return res.status(201).json({
             ok:true,

@@ -1,5 +1,4 @@
 const { response } = require('express');
-const { uploadFile } = require('../helpers/upload-file');
 const { validateDataUser } = require('../helpers/validate-user');
 
 const User = require("../models/User.model");

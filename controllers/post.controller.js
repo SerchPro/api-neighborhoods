@@ -7,10 +7,11 @@ const axios = require("axios");
 
 
 const { validateDataPost } = require('../helpers/validate-post');
+const { uploadFile } = require('../helpers/upload-file');
 
 const createPost = async(req, res= response) =>{
     try {
-        const { title, description, userID, idCategory,  links, images} = req.body;
+        const { title, description, userID, idCategory,  links} = req.body;
         const {name: nameCategory} = await Category.findById({ _id:idCategory, active: true });
         let dataPost = {
                 title,
@@ -19,7 +20,14 @@ const createPost = async(req, res= response) =>{
                 _user: userID
             }
         if ( links ) dataPost.links = links
-        if ( images ) dataPost.images = images
+
+        if(req.files && req.files.archivo){
+            console.log("tengo archivo", req.files)
+            const secure_url = await uploadFile(false, req.files.archivo);
+            dataPost.images = [secure_url]
+        }else{
+            console.log("no tengo archivo", req.files)
+        }
 
         const { dataFeatures, dataError } = validateDataPost(nameCategory, req.body);
 
@@ -34,8 +42,6 @@ const createPost = async(req, res= response) =>{
         const addPost = await axios.post(`${process.env.NEIGHBORHOODS_URI}/user/${userID}/addPostaUSer`, {
             "idPost": idPost
         });
-
-        //const secure_url = await uploadFile(user, req.files.archivo);
 
         if (dataFeatures){
             dataFeatures._post = post._id
