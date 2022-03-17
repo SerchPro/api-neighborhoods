@@ -11,8 +11,9 @@ async function uploadFile(image_url, file) {
                 cloudinary.uploader.destroy(public_id);
             }
         }
+        const { tempFilePath } = file;
 
-        const { secure_url } = await cloudinary.uploader.upload(file);
+        const { secure_url } = await cloudinary.uploader.upload(tempFilePath);
 
         return secure_url
 

@@ -6,12 +6,10 @@ cloudinary.config(process.env.CLOUDINARY_URL);
 const uploadImageCloudinary = async(req, res = response) => {
     try {
         const { id } = req.body;
-        const { tempFilePath } = req.files.archivo;
 
         user = await User.findById(id);
-        console.log(tempFilePath)
-        secure_url = await uploadFile(user.image_url, tempFilePath);
-
+        secure_url = await uploadFile(user.image_url, req.files.archivo);
+        
         user.image_url = secure_url;
         await user.save();
 
