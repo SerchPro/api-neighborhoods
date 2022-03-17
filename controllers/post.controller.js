@@ -2,7 +2,6 @@ const { response } = require('express');
 
 const Post = require("../models/Post.model"); // Require the User model in order to interact with the database
 const Category = require('../models/Category.model');
-const Features = require('../models/Features.model')
 const axios = require("axios");
 
 
@@ -11,8 +10,9 @@ const { uploadFile } = require('../helpers/upload-file');
 
 const createPost = async(req, res= response) =>{
     try {
+        //parametros obligatorios
         const { title, description, userID, idCategory,  links} = req.body;
-        const {name: nameCategory} = await Category.findById({ _id:idCategory, active: true });
+        //const {name: nameCategory} = await Category.findById({ _id:idCategory, active: true });
         let dataPost = {
                 title,
                 description,
@@ -23,19 +23,25 @@ const createPost = async(req, res= response) =>{
 
         if(req.files && req.files.archivo){
             console.log("tengo archivo", req.files)
-            const secure_url = await uploadFile(false, req.files.archivo);
+            secure_url = await uploadFile(false, req.files.archivo);
+            if (!secure_url){
+                return res.status(500).json({
+                    ok:false,
+                    msg: "something went wrong"
+                });
+            }
             dataPost.images = [secure_url]
         }else{
             console.log("no tengo archivo", req.files)
         }
 
-        const { dataFeatures, dataError } = validateDataPost(nameCategory, req.body);
+        /*const { dataFeatures, dataError } = validateDataPost(nameCategory, req.body);
 
         if (dataError.error){ 
             return res.status(400).json({
                 ok: false,
                 msg: dataError.msg //"missing parameters"
-        })}
+        })}*/
 
         const post = await Post.create(dataPost);
         const idPost = post._id
@@ -43,12 +49,12 @@ const createPost = async(req, res= response) =>{
             "idPost": idPost
         });
 
-        if (dataFeatures){
+        /*if (dataFeatures){
             dataFeatures._post = post._id
             console.log(post._id)
             console.log(dataFeatures)
             const features = await Features.create(dataFeatures)
-        }
+        }*/
 
         return res.json({
             ok: true,
@@ -70,14 +76,10 @@ const getPost = async(req, res= response) =>{
         let feature = {}
         const post = await Post.findOne({ _id:id, active: true})
                 .populate('_user', 'username email image_url');
-        console.log(post)
-        if (post) feature = await Features.findOne({_post: post._id})
-        console.log(feature)
         return res.json({
             ok: true,
             msg:"get post",
-            post,
-            feature
+            post
         });
     }catch(error){
         console.log(error)
@@ -135,27 +137,39 @@ const addFavoritePost = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
 
 const getPosts = async(req, res = response) => {
-    const { skip = 0, limit = 5 } = req.query;
-    const [count, posts] = await Promise.all(
-        [
-            Post.countDocuments({ active: true }),
-            Post.find({ active: true })
-            .populate('_user', 'username image_url')
-            //.populate('categoria', 'nombre')
-            .skip(Number(skip))
-            .limit(Number(limit))
-        ]);
-    //console.log(count, posts)
-    return res.json({ 
-        count, 
-        posts
-    });
+
+    try{
+        const { skip = 0, limit = 10 } = req.query;
+        const [count, posts] = await Promise.all(
+            [
+                Post.countDocuments({ active: true }),
+                Post.find({ active: true })
+                .populate('_user', 'username image_url name')
+                .populate('category', 'name')
+                .skip(Number(skip))
+                .limit(Number(limit))
+            ]);
+
+        return res.json({
+            ok: true,
+            count,
+            posts
+        });
+
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            ok:false,
+            msg: "something went wrong"
+        });
+    }
+
 }
 
 
@@ -184,12 +198,10 @@ const deletePost = async(req, res= response) =>{
     try {
         const { id } = req.params;
         const post = await Post.findByIdAndUpdate(id, {active: false}, { new: true});
-        const features = await Features.findOneAndUpdate({_post: id}, {active: false}, { new: true});
         
         return res.json({
             ok: true,
-            post,
-            features
+            post
         });
 
     }catch(error){
