@@ -6,7 +6,8 @@ const User = require("../models/User.model");
 const getUser = async(req, res= response) =>{
     try {
         const { id } = req.params;
-        const user = await User.findOne({_id:id , active: true});
+        const user = await User.findOne({_id:id , active: true})
+            .populate('_posts');
         const userSend = validateDataUser(user);
 
         return res.json({
@@ -27,7 +28,14 @@ const getUserbyUsername = async(req, res= response) =>{
     try {
         const { username } = req.params;
         console.log(username)
-        const user = await User.findOne({username , active: true});
+        const user = await User.findOne({username , active: true})
+        .populate({
+            path:'_posts',
+            populate:{
+                path:'_user',
+                model:'User'
+            }
+        })
         const userSend = validateDataUser(user);
 
         return res.json({

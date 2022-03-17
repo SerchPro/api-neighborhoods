@@ -10,9 +10,9 @@ const validateDataUser = (user) => {
         phone: user.phone,
         name: user.name,
         myPosts: user._posts,
-        myfollower: user._follower,
+        myFollowers: user._follower,
         myFollowings: user._following,
-        myfavorites: user._favorites,
+        myFavorites: user._favorites,
         created: user.createdAt
     }
 
