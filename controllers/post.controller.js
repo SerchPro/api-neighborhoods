@@ -12,15 +12,24 @@ const createPost = async(req, res= response) =>{
     try {
         //parametros obligatorios
         const { title, description, userID, idCategory,  links} = req.body;
-        //const {name: nameCategory} = await Category.findById({ _id:idCategory, active: true });
+
+        if(idCategory){
+            category = await Category.findById({ _id:idCategory, active: true });
+            if (!category){
+                console.log("no existe categoria")
+                res.status(400).json({
+                    ok:false,
+                    msg:"something went wrong"
+                })
+            }
+        }
         let dataPost = {
-                title,
                 description,
-                category: idCategory,
                 _user: userID
             }
         if ( links ) dataPost.links = links
-
+        if ( title ) dataPost.title = title
+        dataPost.category = idCategory
         if(req.files && req.files.archivo){
             console.log("tengo archivo", req.files)
             secure_url = await uploadFile(false, req.files.archivo);
@@ -48,6 +57,11 @@ const createPost = async(req, res= response) =>{
         const addPost = await axios.post(`${process.env.NEIGHBORHOODS_URI}/user/${userID}/addPostaUSer`, {
             "idPost": idPost
         });
+        //console.log(post)
+        const newPost = await Post.findOne({ _id: post._id, active: true })
+                .populate('_user', 'username image_url name')
+                .populate('category', 'name')
+
 
         /*if (dataFeatures){
             dataFeatures._post = post._id
@@ -58,7 +72,7 @@ const createPost = async(req, res= response) =>{
 
         return res.json({
             ok: true,
-            msg:"post created"
+            post: newPost
         });
 
     }catch(error){
@@ -104,14 +118,13 @@ const addReviewPost = async(req, res= response) =>{
         console.log(post)
         return res.json({
             ok: true,
-            msg:"add Review post",
             post
         });
     }catch(error){
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -126,12 +139,15 @@ const addFavoritePost = async(req, res= response) =>{
         const newFavorites = [...favorites, idUser];
         post._favorites = newFavorites;
         await post.save();
+        console.log(idUser, id)
+        const addfavoriteUser = await axios.post(`${process.env.NEIGHBORHOODS_URI}/user/${idUser}/addFavoriteUser`, {
+            "idPost": id
+        });
 
-        console.log(post)
+        console.log(addfavoriteUser)
         return res.json({
             ok: true,
-            msg:"add Review post",
-            post
+            msg:"add favorite post"
         });
     }catch(error){
         console.log(error)
@@ -150,10 +166,12 @@ const getPosts = async(req, res = response) => {
             [
                 Post.countDocuments({ active: true }),
                 Post.find({ active: true })
+                .sort({createdAt: -1})
                 .populate('_user', 'username image_url name')
                 .populate('category', 'name')
                 .skip(Number(skip))
-                .limit(Number(limit))
+                .limit(Number(limit)
+                )
             ]);
 
         return res.json({

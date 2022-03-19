@@ -4,8 +4,6 @@ const postSchema = new Schema(
     {
         title:{
             type: String,
-            min: [2, "Title must be at least 2 characters"],
-            max: [20, "Title must be at most 20 characters"],
         },
         description:{
             type: String,
@@ -15,7 +13,7 @@ const postSchema = new Schema(
         category: {
             type: Schema.Types.ObjectId,
             ref: 'Category',
-            required: true
+            default: "623163e231a72fc77e90720f"
         },
         links:[{
             type: String

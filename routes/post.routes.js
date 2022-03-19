@@ -15,13 +15,9 @@ const { categoryExists, userExists, postExists, reviewExists } = require('../hel
 //router.use( validateJWT )
 
 router.post("/", [
-    check('title', 'Title must be at least 2 characters.').isLength({ min: 2 }),
-    check('title', 'Title must be at most 20 characters.').isLength({ max: 20 }),
     check('description', 'Description must be at least 10 characters.').isLength({ min: 10 }),
     check('userID', ' invalid id ').isMongoId(),
     check('userID', 'the user  doesnt exist').custom(userExists),
-    check('idCategory', 'invalid id ').isMongoId(),
-    check('idCategory', 'the category  doesnt exist').custom(categoryExists),
     validateFileds
 ], createPost);
 
