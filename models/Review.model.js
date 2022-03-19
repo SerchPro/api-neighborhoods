@@ -2,12 +2,6 @@ const { Schema, model } = require("mongoose");
 
 const reviewSchema = new Schema(
     {
-        title: {
-            type: String,
-            required: [true, "Title is required"],
-            min: [2, "Title must be at least 2 characters"],
-            max: [50, "Title must be at most 50 characters"],
-        },
         comment: {
             type: String,
             required: [true, "Comment is required"],
@@ -18,9 +12,9 @@ const reviewSchema = new Schema(
             type: Boolean,
             default: true
         },
-        _user: {
+        _user:{
             type: Schema.Types.ObjectId,
-            ref: "User",
+            ref: 'User',
             required: true,
         },
         _post: {
