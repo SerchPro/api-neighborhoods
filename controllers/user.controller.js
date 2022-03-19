@@ -36,6 +36,13 @@ const getUserbyUsername = async(req, res= response) =>{
                 model:'User'
             }
         })
+        .populate({
+            path:'_favorites',
+            populate:{
+                path:'_user',
+                model:'User'
+            }
+        })
         const userSend = validateDataUser(user);
 
         return res.json({
@@ -99,13 +106,27 @@ const addFavoriteUser = async (req, res) => {
 
 const addFollowerUser = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { idUser } = req.body;
-        const user = await User.findOne({_id: id, active:true});
-        const followers = user._followers;
-        const newFollowers = [...followers, idUser];
-        user._followers = newFollowers;
-        await user.save();
+        const { id } = req.params;//el id del auth
+        const { idUser } = req.body; //
+
+        console.log(`id ${id} idUser ${idUser}`)
+
+        const userFollowing = await User.findOne({_id: id, active:true});
+        const followings = userFollowing._following;
+        const newFollowings = [...followings, idUser];
+        userFollowing._following = newFollowings;
+        await userFollowing.save();
+
+        console.log(`followings ${followings} newFollowings ${newFollowings}`)
+
+        const userFollow = await User.findOne({_id: idUser, active:true});
+        const followers = userFollow._followers;
+        const newFollowers = [...followers, id];
+        userFollow._followers = newFollowers;
+        await userFollow.save();
+
+        console.log(`followers ${followers} newFollowers ${newFollowers}`)
+
         return res.json({
             ok: true,
             msg:"add a new follower to a user"
@@ -119,19 +140,28 @@ const addFollowerUser = async (req, res) => {
     }
 }
 
-const addFollowingUser = async (req, res) => {
+const unFollowUser = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { idUser } = req.body;
-        const user = await User.findOne({_id: id, active:true});
-        const followings = user._following;
-        const newFollowing = [...followings, idUser];
-        user._following = newFollowing;
-        await user.save();
+        const { id } = req.params;//el id del auth
+        const { idUser } = req.body; //
+
+        const userFollowing = await User.findOne({_id: id, active:true});
+        const followings = userFollowing._following;
+        const newFollowings = followings.pull( idUser)
+        userFollowing._following = newFollowings;
+        await userFollowing.save();
+
+        const userFollow = await User.findOne({_id: idUser, active:true});
+        const followers = userFollow._followers;
+        const newFollowers = followers.pull( id)
+        userFollow._followers = newFollowers;
+        await userFollow.save();
+
         return res.json({
             ok: true,
-            msg:"add a new following to a user"
+            msg:"unfollow"
         });
+
     }catch(error){
         console.log(error)
         return res.status(500).json({
@@ -234,7 +264,7 @@ module.exports = {
     addPostaUser,
     addFavoriteUser,
     addFollowerUser,
-    addFollowingUser,
+    unFollowUser,
     updateUser,
     deleteUser,
 };

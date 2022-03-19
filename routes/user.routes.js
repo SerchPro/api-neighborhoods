@@ -7,7 +7,7 @@ const router = require("express").Router();
 const { check } = require('express-validator');
 const { validateFileds } = require('../middleware/validator_fields');
 const { getUser, getUserbyUsername, updateUser, deleteUser, addPostaUser, getPostsUser,
-        addFavoriteUser, addFollowerUser, addFollowingUser} = require('../controllers/user.controller')
+        addFavoriteUser, addFollowerUser, unFollowUser} = require('../controllers/user.controller')
 const { userExists, postExists, userExistsByUsername } = require('../helpers/db-validator')
 
  //const { validateJWT } = require("../middleware/validate-jwt");
@@ -67,13 +67,13 @@ router.post("/:id/addFollowerUser", [
     validateFileds
 ], addFollowerUser);
 
-router.post("/:id/addFollowingUser", [
+router.post("/:id/unFollow", [
     check('id', 'invalid id').isMongoId(),
     check('id').custom(userExists),
     check('idUser', 'invalid idUser').isMongoId(),
     check('idUser').custom(userExists),
     validateFileds
-], addFollowingUser);
+], unFollowUser);
 
 
 router.delete("/:id", [
