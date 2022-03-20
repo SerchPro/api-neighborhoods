@@ -13,9 +13,13 @@ const createReview = async(req, res= response) =>{
         const addReviewTopost = await axios.post(`${process.env.NEIGHBORHOODS_URI}/post/${idPost}/addReviewPost`, {
             "idReview": review._id
         });
+
+        const newReview = await Review.findOne({ _id:review._id, active: true})
+        .populate('_user', 'username email image_url');
+
         return res.json({
             ok: true,
-            review
+            review:newReview
         });
 
     }catch(error){
