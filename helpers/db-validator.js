@@ -60,6 +60,14 @@ const reviewExists = async( _id ) =>{
     }
 }
 
+const typeExists = async( type ) =>{
+    const validaTipes = ['add', 'remove']
+    const typevalidated = validaTipes.includes(type)
+    if ( !typevalidated ) {
+        throw new Error(`the Review: ${ Review } doesnt exist.`)
+    }
+}
+
 module.exports = {
     emailExists,
     usernameExists,
@@ -67,5 +75,6 @@ module.exports = {
     categoryExists,
     userExists,
     postExists,
-    reviewExists
+    reviewExists,
+    typeExists
 }

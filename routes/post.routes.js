@@ -6,9 +6,10 @@
 const router = require("express").Router();
 const { check } = require('express-validator');
 
-const { createPost, getPost, updatePost, deletePost, getPosts, addReviewPost, addFavoritePost} = require('../controllers/post.controller');
+const { createPost, getPost, updatePost, deletePost, getPosts, 
+            addReviewPost, addRemoveFavoritePost} = require('../controllers/post.controller');
 const { validateFileds } = require('../middleware/validator_fields');
-const { categoryExists, userExists, postExists, reviewExists } = require('../helpers/db-validator')
+const { categoryExists, userExists, postExists, reviewExists, typeExists } = require('../helpers/db-validator')
 //const { validateJWT } = require("../middleware/validate-jwt");
 
 
@@ -40,13 +41,17 @@ router.post("/:id/addReviewPost", [
 ], addReviewPost);
 
 
-router.post("/:id/addFavoritePost", [
+router.post("/:id/addRemoveFavoritePost", [
     check('id', 'invalid id').isMongoId(),
     check('id').custom(postExists),
     check('idUser', 'invalid idUser').isMongoId(),
     check('idUser').custom(userExists),
+    check('type').not().isEmpty(),
+    check('type').custom(typeExists),
     validateFileds
-], addFavoritePost);
+], addRemoveFavoritePost);
+
+
 
 router.put("/:id", [
     check('id', 'invalid id').isMongoId(),

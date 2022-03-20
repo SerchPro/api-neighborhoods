@@ -82,19 +82,28 @@ const getPostsUser = async (req, res = response) => {
     }
 }
 
-const addFavoriteUser = async (req, res) => {
+const addRemoveFavoriteUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const { idPost } = req.body;
+        const { idPost, type } = req.body;
+
         const user = await User.findOne({_id: id, active:true});
         const favorites = user._favorites;
-        const newFavorities = [...favorites, idPost];
+
+        let newFavorities = []
+        if (type == 'add'){
+            newFavorities = [...favorites, idPost];
+        }else{
+            newFavorities = favorites.pull(idPost);
+        }
         user._favorites = newFavorities;
         await user.save();
+
         return res.json({
             ok: true,
-            msg:"add a new favorite to a user"
+            msg:`${type} a favorite to a user`
         });
+
     }catch(error){
         console.log(error)
         return res.status(500).json({
@@ -103,6 +112,7 @@ const addFavoriteUser = async (req, res) => {
         });
     }
 }
+
 
 const addFollowerUser = async (req, res) => {
     try {
@@ -129,7 +139,7 @@ const addFollowerUser = async (req, res) => {
 
         return res.json({
             ok: true,
-            msg:"add a new follower to a user"
+            newFollowers
         });
     }catch(error){
         console.log(error)
@@ -159,7 +169,7 @@ const unFollowUser = async (req, res) => {
 
         return res.json({
             ok: true,
-            msg:"unfollow"
+            newFollowers
         });
 
     }catch(error){
@@ -262,7 +272,7 @@ module.exports = {
     getUserbyUsername,
     getPostsUser,
     addPostaUser,
-    addFavoriteUser,
+    addRemoveFavoriteUser,
     addFollowerUser,
     unFollowUser,
     updateUser,

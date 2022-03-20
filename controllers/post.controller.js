@@ -130,24 +130,33 @@ const addReviewPost = async(req, res= response) =>{
 };
 
 
-const addFavoritePost = async(req, res= response) =>{
+const addRemoveFavoritePost = async(req, res= response) =>{
     try {
         const { id } = req.params;
-        const { idUser } = req.body;
+        const { idUser, type } = req.body;
+        console.log(type)
         const post = await Post.findOne({ _id:id, active: true});
         const favorites = post._favorites;
-        const newFavorites = [...favorites, idUser];
-        post._favorites = newFavorites;
+
+        let newFavorities = []
+        if (type === 'add'){
+            newFavorities = [...favorites, idUser];
+        }else{
+            newFavorities = favorites.pull(idUser);
+        }
+        post._favorites = newFavorities;
         await post.save();
-        console.log(idUser, id)
-        const addfavoriteUser = await axios.post(`${process.env.NEIGHBORHOODS_URI}/user/${idUser}/addFavoriteUser`, {
-            "idPost": id
+
+        const addfavoriteUser = await axios.post(`${process.env.NEIGHBORHOODS_URI}/user/${idUser}/addRemoveFavoriteUser`, {
+            "idPost": id,
+            "type": type
         });
 
-        console.log(addfavoriteUser)
+        //console.log(addfavoriteUser)
+
         return res.json({
             ok: true,
-            msg:"add favorite post"
+            newFavorities
         });
     }catch(error){
         console.log(error)
@@ -157,6 +166,9 @@ const addFavoritePost = async(req, res= response) =>{
         });
     }
 };
+
+
+
 
 const getPosts = async(req, res = response) => {
 
@@ -234,7 +246,7 @@ const deletePost = async(req, res= response) =>{
 module.exports = {
     createPost,
     addReviewPost,
-    addFavoritePost,
+    addRemoveFavoritePost,
     getPost,
     getPosts,
     updatePost,
