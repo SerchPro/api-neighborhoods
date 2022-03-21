@@ -89,7 +89,8 @@ const getPost = async(req, res= response) =>{
         const { id } = req.params;
         let feature = {}
         const post = await Post.findOne({ _id:id, active: true})
-                .populate('_user', 'username email image_url');
+                .populate('_user', 'username email image_url')
+                .populate('category', 'name');
         return res.json({
             ok: true,
             msg:"get post",
@@ -173,7 +174,7 @@ const addRemoveFavoritePost = async(req, res= response) =>{
 const getPosts = async(req, res = response) => {
 
     try{
-        const { skip = 0, limit = 10 } = req.query;
+        const { skip = 0, limit = 20 } = req.query;
         const [count, posts] = await Promise.all(
             [
                 Post.countDocuments({ active: true }),
