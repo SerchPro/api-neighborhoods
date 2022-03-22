@@ -11,7 +11,7 @@ const { uploadFile } = require('../helpers/upload-file');
 const createPost = async(req, res= response) =>{
     try {
         //parametros obligatorios
-        const { title, description, userID, idCategory,  links} = req.body;
+        const { title, description, userID, idCategory,  links, neighborhood} = req.body;
 
         if(idCategory){
             category = await Category.findById({ _id:idCategory, active: true });
@@ -25,7 +25,8 @@ const createPost = async(req, res= response) =>{
         }
         let dataPost = {
                 description,
-                _user: userID
+                _user: userID,
+                neighborhood:neighborhood
             }
         if ( links ) dataPost.links = links
         if ( title ) dataPost.title = title
@@ -174,11 +175,12 @@ const addRemoveFavoritePost = async(req, res= response) =>{
 const getPosts = async(req, res = response) => {
 
     try{
+        const { neighborhood } = req.params;
         const { skip = 0, limit = 20 } = req.query;
         const [count, posts] = await Promise.all(
             [
-                Post.countDocuments({ active: true }),
-                Post.find({ active: true })
+                Post.countDocuments({neighborhood: neighborhood,  active: true }),
+                Post.find({ neighborhood: neighborhood, active: true })
                 .sort({createdAt: -1})
                 .populate('_user', 'username image_url name')
                 .populate('category', 'name')

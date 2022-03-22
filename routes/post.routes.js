@@ -19,12 +19,16 @@ router.post("/", [
     check('description', 'Description must be at least 10 characters.').isLength({ min: 10 }),
     check('userID', ' invalid id ').isMongoId(),
     check('userID', 'the user  doesnt exist').custom(userExists),
+    check('neighborhood', 'the neighborhood is necessary').not().isEmpty(),
     validateFileds
 ], createPost);
 
 
 
-router.get("/getAllPost", getPosts);
+router.get("/getAllPost/:neighborhood", [
+    check('neighborhood', ' neighborhood is required').not().isEmpty(),
+    validateFileds
+], getPosts);
 
 router.get("/:id", [
     check('id', 'invalid id').isMongoId(),

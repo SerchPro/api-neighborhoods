@@ -15,6 +15,10 @@ const postSchema = new Schema(
             ref: 'Category',
             default: "623163e231a72fc77e90720f"
         },
+        neighborhood:{
+            type: String,
+            required: [true, "the neighborhood is required"]
+        },
         links:[{
             type: String
         }],
