@@ -3,6 +3,7 @@ const Usuario = require('../models/User.model');
 const Category = require('../models/Category.model');
 const Post = require('../models/Post.model');
 const Review = require('../models/Review.model')
+const Neighborhood  = require('../models/Address.model')
 
 const emailExists = async(email) => {
     const user = await Usuario.findOne({ email });
@@ -68,6 +69,13 @@ const typeExists = async( type ) =>{
     }
 }
 
+const neighborhoodExists = async( _id ) => {
+    const neighborhood = await Neighborhood.findById({ _id });
+    if ( !neighborhood ) {
+        throw new Error(`the Neighborhood: ${ neighborhood } doesnt exist.`)
+    }
+}
+
 module.exports = {
     emailExists,
     usernameExists,
@@ -76,5 +84,6 @@ module.exports = {
     userExists,
     postExists,
     reviewExists,
-    typeExists
+    typeExists,
+    neighborhoodExists
 }
