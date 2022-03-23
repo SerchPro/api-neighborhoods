@@ -38,7 +38,7 @@ const createNeighborhood = async(req, res= response) => {
             _user: idUser
         }
         console.log(data)
-        const address = Address.create(data)
+        const address = await Address.create(data)
 
         return res.json({
             ok:true,
