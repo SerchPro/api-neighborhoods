@@ -17,8 +17,8 @@ async function uploadFile(image_url, file) {
 
         return secure_url
 
-    } catch (e) {
-        console.log("error to upload the file ", e);
+    } catch (error) {
+        console.log("error to upload the file ", error);
         return false;
     }
 }

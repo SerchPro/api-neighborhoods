@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const validateJWT = ( req, res = response, next ) => {
 
     const token = req.header('x-token')
-    console.log('mi token', token)
 
     if( !token ) {
         res.status(401).json({ 
@@ -22,8 +21,8 @@ const validateJWT = ( req, res = response, next ) => {
         req.username = username
         req.image_url = image_url
 
-    }catch (err){
-        console.log(err)
+    }catch (error){
+        console.log(error)
         res.status(401).json({ 
             ok: false,
             msg: "invalid token",

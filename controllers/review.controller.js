@@ -9,7 +9,6 @@ const createReview = async(req, res= response) =>{
         const { comment, userID, idPost } = req.body;
 
         const review = await Review.create({ comment, _user:userID, _post:idPost });
-        console.log(review)
         const addReviewTopost = await axios.post(`${process.env.NEIGHBORHOODS_URI}/post/${idPost}/addReviewPost`, {
             "idReview": review._id
         });
@@ -36,7 +35,6 @@ const getReview = async(req, res= response) =>{
         const { id } = req.params;
         const review = await Review.findOne({ _id:id, active: true})
                 .populate('_user', 'username email image_url');
-        console.log(review)
 
         return res.json({
             ok: true,
@@ -85,7 +83,6 @@ const updateReview = async(req, res= response) =>{
         const {title , comment } = req.body;
 
         if(!title && !comment){
-            console.log("no parameters")
             return res.status(400).json({
                 ok:false,
                 msg: `missing parameteres to update a review`
@@ -96,8 +93,6 @@ const updateReview = async(req, res= response) =>{
 
         if ( title) dataupdate.title = title;
         if ( comment) dataupdate.comment = comment;
-
-        console.log("??", dataupdate)
 
         const newReview = await Review.findByIdAndUpdate(id, dataupdate , { new: true});
 

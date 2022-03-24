@@ -21,12 +21,11 @@ const usernameExists = async( username ) => {
 }
 
 const categoryExists = async( _id ) =>{
-    console.log("hello", _id);
     try{
         const category = await Category.findById({ _id });
         if ( !category ) throw new Error(`the category: ${ category } doesnt exist.`)
-    }catch(err){
-        console.log(err)
+    }catch(error){
+        console.log(error)
         throw new Error(`Error to validate category`)
     }
     
@@ -40,7 +39,6 @@ const userExists = async( _id ) =>{
 }
 
 const userExistsByUsername = async( username ) =>{
-    console.log(username)
     const user = await Usuario.findOne({username , active: true});
     if ( !user ) {
         throw new Error(`the user: ${ user } doesnt exist.`)

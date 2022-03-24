@@ -11,8 +11,8 @@ async function sendEmail(Toemail, data, id) {
         };
         await sgMail.send(msg);
         return true;
-    } catch (e) {
-        console.log("error to send an email ", e);
+    } catch (error) {
+        console.log("error to send an email ", error);
         return false;
     }
 }

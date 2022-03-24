@@ -38,7 +38,6 @@ const login = async(req, res= response) =>{
 };
 
 const signup = async(req, res = response) =>{
-  console.log("signup")
     try {
         const { username, birthday, email,  password, confirmPassword } = req.body;
         if(password !== confirmPassword) return res.status(406).json({ok:false, msg:" your passwords are different "})
@@ -152,7 +151,6 @@ const changeOfPassword = async (req, res = response) => {
   try{
     const {uid}  = req;
     if(!uid){
-      console.log("uid not found")
       return res.status(500).json({
         ok:false,
         msg: "Sometihing went wrong"

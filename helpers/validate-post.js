@@ -13,7 +13,6 @@ const validateDataPost = (category, data ) => {
         end,
         brand,
         year} = data;
-    console.log("cat", category)
     switch (category) {
         case 'Productos':
             if (!price || !delivery_type || !payment_method || !state) { return { dataFeatures, dataError} }
@@ -28,7 +27,6 @@ const validateDataPost = (category, data ) => {
             dataFeatures.state = state
             break;
         case 'Servicios':
-            console.log(price, payment_method)
             if (!price || !payment_method) { return { dataFeatures, dataError} }
             if (payment_method !== 'Efectivo' && payment_method !== 'Tranferencia_electrónica' && payment_method !== 'tarjeta_de_debito' && payment_method !== 'tarjeta_de_credito' ){
                 console.error("----------------")
@@ -36,7 +34,6 @@ const validateDataPost = (category, data ) => {
                 dataError.msg = `wrong parameter payment_method ${payment_method} to category ${category}`
                 return { dataFeatures, dataError}
             }
-            console.log("..............")
             dataFeatures.price = price
             dataFeatures.payment_method = payment_method
             break;
@@ -66,7 +63,6 @@ const validateDataPost = (category, data ) => {
             break;
     }
     dataError.error = false
-    console.log( "*********", dataFeatures, dataError)
     return { dataFeatures, dataError}
 }
 

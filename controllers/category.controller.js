@@ -45,9 +45,7 @@ const getAllCategory = async(req, res = response) =>{
 
 const getCategory = async(req, res = response) =>{
     try {
-        console.log("holaa")
         const { id } = req.params;
-        console.log(id)
 
         const category = await Category.findById(id);
 

@@ -32,7 +32,6 @@ const createPost = async(req, res= response) =>{
         if ( title ) dataPost.title = title
         dataPost.category = idCategory
         if(req.files && req.files.archivo){
-            console.log("tengo archivo", req.files)
             secure_url = await uploadFile(false, req.files.archivo);
             if (!secure_url){
                 return res.status(500).json({
@@ -41,8 +40,6 @@ const createPost = async(req, res= response) =>{
                 });
             }
             dataPost.images = [secure_url]
-        }else{
-            console.log("no tengo archivo", req.files)
         }
 
         /*const { dataFeatures, dataError } = validateDataPost(nameCategory, req.body);
@@ -58,18 +55,9 @@ const createPost = async(req, res= response) =>{
         const addPost = await axios.post(`${process.env.NEIGHBORHOODS_URI}/user/${userID}/addPostaUSer`, {
             "idPost": idPost
         });
-        //console.log(post)
         const newPost = await Post.findOne({ _id: post._id, active: true })
                 .populate('_user', 'username image_url name')
                 .populate('category', 'name')
-
-
-        /*if (dataFeatures){
-            dataFeatures._post = post._id
-            console.log(post._id)
-            console.log(dataFeatures)
-            const features = await Features.create(dataFeatures)
-        }*/
 
         return res.json({
             ok: true,
@@ -116,8 +104,6 @@ const addReviewPost = async(req, res= response) =>{
         const newReviews = [...reviews, idReview];
         post._reviews = newReviews;
         await post.save();
-
-        console.log(post)
         return res.json({
             ok: true,
             post
@@ -136,7 +122,6 @@ const addRemoveFavoritePost = async(req, res= response) =>{
     try {
         const { id } = req.params;
         const { idUser, type } = req.body;
-        console.log(type)
         const post = await Post.findOne({ _id:id, active: true});
         const favorites = post._favorites;
 
@@ -153,8 +138,6 @@ const addRemoveFavoritePost = async(req, res= response) =>{
             "idPost": id,
             "type": type
         });
-
-        //console.log(addfavoriteUser)
 
         return res.json({
             ok: true,

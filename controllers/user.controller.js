@@ -27,7 +27,6 @@ const getUser = async(req, res= response) =>{
 const getUserbyUsername = async(req, res= response) =>{
     try {
         const { username } = req.params;
-        console.log(username)
         const user = await User.findOne({username , active: true})
         .populate({
             path:'_posts',
@@ -68,7 +67,6 @@ const getPostsUser = async (req, res = response) => {
                 //.populate('categoria', 'nombre')
                 .skip(Number(skip))
                 .limit(Number(limit))
-        console.log(posts)
         return res.json({ 
             ok: true,
             posts
@@ -118,16 +116,12 @@ const addFollowerUser = async (req, res) => {
     try {
         const { id } = req.params;//el id del auth
         const { idUser } = req.body; //
-
-        console.log(`id ${id} idUser ${idUser}`)
-
         const userFollowing = await User.findOne({_id: id, active:true});
         const followings = userFollowing._following;
         const newFollowings = [...followings, idUser];
         userFollowing._following = newFollowings;
         await userFollowing.save();
 
-        console.log(`followings ${followings} newFollowings ${newFollowings}`)
 
         const userFollow = await User.findOne({_id: idUser, active:true});
         const followers = userFollow._followers;
@@ -135,7 +129,6 @@ const addFollowerUser = async (req, res) => {
         userFollow._followers = newFollowers;
         await userFollow.save();
 
-        console.log(`followers ${followers} newFollowers ${newFollowers}`)
 
         return res.json({
             ok: true,
@@ -209,7 +202,6 @@ const updateUser = async(req, res= response) =>{
         const {username, email, phone, birthday, bio, name } = req.body;
         const user = await User.findById(id)
         if(!username && !email && !phone && !birthday && !bio && !name){
-            console.log("no parameters")
             return res.status(400).json({
                 ok:false,
                 msg: `missing parameteres to update a user`
@@ -230,7 +222,6 @@ const updateUser = async(req, res= response) =>{
         if ( birthday && user.birthday != birthday) dataupdate.birthday = birthday;
         if ( bio && user.bio != bio) dataupdate.bio = bio;
         if ( name && user.name != name) dataupdate.name = name;
-        console.log("dataUpdate", dataupdate)
         const newUser = await User.findByIdAndUpdate(id, dataupdate , { new: true});
         const userSend = validateDataUser(newUser);
         return res.json({
