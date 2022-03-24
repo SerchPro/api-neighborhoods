@@ -4,7 +4,7 @@ cloudinary.config(process.env.CLOUDINARY_URL);
 async function uploadFile(image_url, file) {
     try {
         if (image_url) {
-            if (!image_url.includes('google') || !image_url.includes('notFound_wpeppw.jpg')) {
+            if (!image_url.includes('google') || !image_url.includes('https://res.cloudinary.com/dfgwlfz48/image/upload/v1648158055/descarga_1_eusudf.png')) {
                 const nombreArr = image_url.split('/');
                 const nombre = nombreArr[nombreArr.length - 1];
                 const [public_id] = nombre.split('.');

@@ -31,7 +31,7 @@ const userSchema = new Schema(
     },
     image_url: {
         type: String,
-        default: 'https://pbs.twimg.com/profile_images/515658522034311168/T6z7LpeE_400x400.jpeg'
+        default: 'https://res.cloudinary.com/dfgwlfz48/image/upload/v1648158055/descarga_1_eusudf.png'
     },
     google: {
         type: Boolean,
