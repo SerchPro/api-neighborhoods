@@ -181,6 +181,27 @@ const unFollowUser = async (req, res) => {
     }
 }
 
+const addAddress = async(req, res = response) =>{
+    try{
+        const { id } = req.params;
+        const { idAddress } = req.body;
+
+        const user = await User.findOne({_id: id, active:true});
+        user._address = idAddress;
+        await user.save();
+
+        return res.json({
+            ok: true,
+            msg:`Address add`
+        });
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            ok:false,
+            msg: error
+        });
+    }
+}
 
 const updateUser = async(req, res= response) =>{
     try {
@@ -277,4 +298,5 @@ module.exports = {
     unFollowUser,
     updateUser,
     deleteUser,
+    addAddress
 };

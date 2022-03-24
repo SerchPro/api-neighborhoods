@@ -52,6 +52,10 @@ const userSchema = new Schema(
       max : [5, "Rating must be at most 5"],
       default : 2
     },
+    _address:{
+      type:Schema.Types.ObjectId,
+      ref:"Address"
+    },
     _posts:
       [
         {

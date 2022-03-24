@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const neighborhoodSchema = new Schema(
+const addressSchema = new Schema(
     {
         neighborhood:{
             type: String,
@@ -14,17 +14,20 @@ const neighborhoodSchema = new Schema(
             type: Boolean,
             default: true
         },
+        cp:{
+            type:Number,
+            required: [true, "the cp is required"]
+        },
         _user:{
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true,
         },
-        
     },
     {
         timestamps: true,
     }
 );
 
-const Review = model("Neighborhood", neighborhoodSchema);
-module.exports = Review;
+const Address = model("Address", addressSchema);
+module.exports = Address;

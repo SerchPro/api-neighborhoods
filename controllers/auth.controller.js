@@ -11,7 +11,8 @@ const saltRounds = 10; // How many rounds should bcrypt run the salt (default [1
 const login = async(req, res= response) =>{
     try {
         const { username, password } = req.body;
-        user = await User.findOne({ username, active: true });
+        user = await User.findOne({ username, active: true })
+        .populate('_address', '_id neighborhood description');
         if (!user || !bcryptjs.compareSync(password, user.password)) {
             return res.status(400).json({
               ok:false,
@@ -50,7 +51,6 @@ const signup = async(req, res = response) =>{
             password: hashedPassword,
           });
         const {jwtResponse:token} = await createJWT(user._id);
-        // cokies
         const userSend = validateDataUser(user);
         res.status(201).json({
           ok: true,
@@ -82,7 +82,8 @@ const logout = (req, res = response) => {
 const recreateToken = async (req, res = response, next) => {
 
   const {uid}  = req;
-  user = await User.findOne({ _id:uid, active: true });
+  user = await User.findOne({ _id:uid, active: true })
+  .populate('_address', '_id neighborhood description');
 
   const {jwtResponse:token} = await createJWT(uid);
   const userSend = validateDataUser(user);
