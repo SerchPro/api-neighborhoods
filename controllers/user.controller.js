@@ -223,7 +223,12 @@ const updateUser = async(req, res= response) =>{
         if ( bio && user.bio != bio) dataupdate.bio = bio;
         if ( name && user.name != name) dataupdate.name = name;
         const newUser = await User.findByIdAndUpdate(id, dataupdate , { new: true});
-        const userSend = validateDataUser(newUser);
+
+        const userFind = await User.findOne({ _id:id, active: true })
+                .populate('_address', '_id neighborhood description');
+
+        const userSend = validateDataUser(userFind);
+
         return res.json({
             ok: true,
             user:userSend
