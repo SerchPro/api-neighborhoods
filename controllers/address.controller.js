@@ -1,5 +1,6 @@
 const { response } = require('express');
 const Address = require("../models/Address.model")
+const axios = require("axios");
 
 
 const getListNeighborhoods = async(req, res= response) => {
@@ -23,7 +24,7 @@ const getListNeighborhoods = async(req, res= response) => {
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -31,25 +32,30 @@ const getListNeighborhoods = async(req, res= response) => {
 
 const createNeighborhood = async(req, res= response) => {
     try {
-        const { neighborhood, description , idUser} = req.body;
+        const { neighborhood, description , idUser, cp} = req.body;
         const data = {
             neighborhood,
             description,
-            _user: idUser
+            _user: idUser,
+            cp
         }
-        console.log(data)
         const address = await Address.create(data)
+        /*await axios.put(`${process.env.NEIGHBORHOODS_URI}/user/${idUser}/addAddress`, {
+            "idAddress": address._id
+        });*/
+
+        const addressSent = await Address.findOne({ _id: address._id, active: true }, '_id neighborhood description')
 
         return res.json({
             ok:true,
-            address
+            address: addressSent
         });
 
     }catch(error){
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -74,7 +80,7 @@ const updateNeighborhood = async(req, res= response) => {
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };

@@ -45,7 +45,7 @@ const getReview = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -72,7 +72,7 @@ const getReviewsPost = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -105,7 +105,7 @@ const updateReview = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -126,7 +126,7 @@ const deleteReview = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };

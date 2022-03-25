@@ -22,7 +22,7 @@ const uploadImageCloudinary = async(req, res = response) => {
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 

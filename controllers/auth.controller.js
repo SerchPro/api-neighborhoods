@@ -32,8 +32,8 @@ const login = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
-        });
+            msg: "something went wrong"
+          });
     }
 };
 
@@ -61,7 +61,7 @@ const signup = async(req, res = response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -112,9 +112,10 @@ const forgotPassword = async (req, res = response) => {
     })
 
   } catch (error) {
+    console.log(error)
     return res.status(500).json({
       ok:false,
-      msg: error
+      msg: "something went wrong"
   });
   }
 
@@ -141,7 +142,7 @@ const resetPassword = async( req, res= response) => {
   } catch (error) {
       return res.status(500).json({
         ok:false,
-        msg: error
+        msg: "something went wrong"
     });
   }
 }

@@ -191,7 +191,7 @@ const addAddress = async(req, res = response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 }
@@ -232,7 +232,7 @@ const updateUser = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -255,7 +255,7 @@ const addPostaUser = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -274,7 +274,7 @@ const deleteUser = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };

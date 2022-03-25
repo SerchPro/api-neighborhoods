@@ -4,13 +4,10 @@ const Post = require("../models/Post.model"); // Require the User model in order
 const Category = require('../models/Category.model');
 const axios = require("axios");
 
-
-const { validateDataPost } = require('../helpers/validate-post');
 const { uploadFile } = require('../helpers/upload-file');
 
 const createPost = async(req, res= response) =>{
     try {
-        //parametros obligatorios
         const { title, description, userID, idCategory,  links, neighborhood} = req.body;
 
         if(idCategory){
@@ -42,14 +39,6 @@ const createPost = async(req, res= response) =>{
             dataPost.images = [secure_url]
         }
 
-        /*const { dataFeatures, dataError } = validateDataPost(nameCategory, req.body);
-
-        if (dataError.error){ 
-            return res.status(400).json({
-                ok: false,
-                msg: dataError.msg //"missing parameters"
-        })}*/
-
         const post = await Post.create(dataPost);
         const idPost = post._id
         const addPost = await axios.post(`${process.env.NEIGHBORHOODS_URI}/user/${userID}/addPostaUSer`, {
@@ -68,7 +57,7 @@ const createPost = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -89,7 +78,7 @@ const getPost = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -204,7 +193,7 @@ const updatePost = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -224,7 +213,7 @@ const deletePost = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };

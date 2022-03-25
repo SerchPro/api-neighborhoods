@@ -17,7 +17,7 @@ const createCategory = async(req, res= response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -38,7 +38,7 @@ const getAllCategory = async(req, res = response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 }
@@ -58,7 +58,7 @@ const getCategory = async(req, res = response) =>{
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -78,7 +78,7 @@ const updateCategory = async(req, res = response) => {
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };
@@ -97,7 +97,7 @@ const deleteCategory = async (req, res = response) => {
         console.log(error)
         return res.status(500).json({
             ok:false,
-            msg: error
+            msg: "something went wrong"
         });
     }
 };

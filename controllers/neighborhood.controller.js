@@ -5,16 +5,22 @@ const axios = require("axios");
 const getNeighborhoods = async(req, res= response) =>{
     try {
         const { cp } = req.params;
-        const token = 'd1441de7-6abd-4435-b062-420c1c39d674'
-        const response = await  axios.get(`https://api.copomex.com/query/get_colonia_por_cp/${cp}?token=${token}`);
-        const data = response.data;
-        if(data.error){
-            console.log(data)
-            return res.status(500).json({
-                ok:false,
-                msg: "something went wrong"
-            })
-        }
+        //const {data:response} = await  axios.get(`https://apisgratis.com/cp/colonias/cp/?valor=${cp}`);
+        //let data = [];
+        let data = [
+            'ELECTRA',
+            'LA LOMA',
+            'ARCOS ELECTRA',
+            'MIGUEL HIDALGO',
+            'VALLE DEL PARAISO',
+            'VIVEROS DEL RIO',
+            'VIVEROS DEL VALLE',
+            'VALLE DE LOS PINOS 2DA. SECCION',
+            'VALLE SOL'
+          ]
+        /*response.map( colonia =>{
+            data.push(colonia.Colonia)
+        });*/
         return res.json({
             ok:true,
             data
