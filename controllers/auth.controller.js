@@ -80,18 +80,28 @@ const logout = (req, res = response) => {
 
 const recreateToken = async (req, res = response, next) => {
 
-  const {uid}  = req;
-  user = await User.findOne({ _id:uid, active: true })
-  .populate('_address', '_id neighborhood description');
+  try {
+    const {uid}  = req;
+    user = await User.findOne({ _id:uid, active: true })
+    .populate('_address', '_id neighborhood description');
 
-  const {jwtResponse:token} = await createJWT(uid);
-  const userSend = validateDataUser(user);
+    const {jwtResponse:token} = await createJWT(uid);
+    const userSend = validateDataUser(user);
 
-    return res.json({
-      ok: true,
-      token,
-      user:userSend
-    });
+      return res.json({
+        ok: true,
+        token,
+        user:userSend
+      });
+  }catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      ok:false,
+      msg: "something went wrong"
+  });
+  }
+
+
 };
 
 
